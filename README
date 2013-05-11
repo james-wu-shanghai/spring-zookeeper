@@ -1,5 +1,4 @@
-The module create a customized PropertyPlaceholderConfigurer which load properties from Zookeeper. And also with properties changing in 
-Zookeeper server, the module will trigger SpringFramework context reload.
+The module create a customized PropertyPlaceholderConfigurer which load properties from Zookeeper. And also with properties changing in Zookeeper server, the module will trigger SpringFramework context reload.
 There're 2 ways to load the module when you use SpringFramework as application container
 1. Bean Style
 	a. add jar to the classpath.
@@ -48,16 +47,13 @@ Then you can Use ${propName} to take reference just like when you use PropertyPl
 Notice:
 1. Both load methods have been tested in Spring Framework 2.5.6 and passed.
 2. If you've one or more PropertyPlaceholderConfigurer, remember to set 'order' attribute and 'ignoreUnresolvablePlaceholders' to every placeholderConfigurer. 
-   Attribute 'order' decides the precedence of your resource. 0 is most important, default value is 2^31-1, which is the lowest
-   precedence. Lowest precedence means once variable conflict encountered, variable read from your config will always be overwritten!
-   Attribute 'ignoreUnresolvablePlaceholders' must be set to 'true' or unexpected result will come. (Customized schema tag has set the value so you just need 
-   keep notice on bean style definitions)
+   Attribute 'order' decides the precedence of your resource. 0 is most important, default value is 2^31-1, which is the lowest precedence. Lowest precedence means once variable conflict encountered, variable read from your config will always be overwritten!
+   Attribute 'ignoreUnresolvablePlaceholders' must be set to 'true' or unexpected result will come. (Customized schema tag has set the value so you just need keep notice on bean style definitions)
 2. One can disable automatic context reload by changing setting in zk.properties from 'reload_context=AUTO' to 'reload_context=HOLD'. 
    JMX is under consideration to be used to expose interface of trigger manually reload.
 3. UI for znode control will be also part of it. Under investigation.
 4. Currently property file with XML format is not supported. Not sure but said Spring 3.X will support XML resource by nature.  
-5. No test of perm memory leak on Spring context reload, if you encounter, check whether your beans, especially those connection-keeping beans, have reclaim the resource
-   or not when bean disposed. If everything fine with your beans, your lucky to fire bugs to Spring Framework.
+5. No test of perm memory leak on Spring context reload, if you encounter, check whether your beans, especially those connection-keeping beans, have reclaim the resource or not when bean disposed. If everything fine with your beans, your lucky to fire bugs to Spring Framework.
 
 Have Fun!
 
