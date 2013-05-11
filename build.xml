@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<project name="ZookeeperPropertyPlaceholderConfigurer" default="make-jar">
+
+	<path id="compile.classpath">
+		<fileset dir="lib/" />
+	</path>
+
+	<target name="cleanup">
+		<delete dir="dist/" quiet="true" />
+	</target>
+
+	<target name="compile">
+		<echo>Compiling</echo>
+		<mkdir dir="dist/bin" />
+		<javac encoding="utf-8" srcdir="src" destdir="dist/bin" fork="true" debug="off" optimize="true">
+			<classpath refid="compile.classpath" />
+		</javac>
+	</target>
+
+	<target name="copy-resource">
+		<copydir dest="dist/bin" src="resources">
+			<include name="**/*.handlers" />
+			<include name="**/*.schemas" />
+		</copydir>
+		<copydir dest="dist/bin" src="src/">
+			<include name="**/*.xsd" />
+		</copydir>
+	</target>
+
+	<target name="make-jar" depends="cleanup,compile,copy-resource">
+		<jar destfile="dist" basedir="dist/bin" jarfile="dist/spring-zookeeper.jar">
+			<manifest>
+				<attribute name="Export-Package" value="com.futureseeds.zookeeper;com.futureseeds.zookeeper.tag;com.futureseeds.zookeeper.config;" />
+			</manifest>
+		</jar>
+		<delete dir="dist/bin" />
+	</target>
+</project>

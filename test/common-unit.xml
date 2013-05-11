@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:zk="http://futureseeds.com/schema/zookeeper"
+	xsi:schemaLocation="
+			http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+			http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd
+			http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd
+			http://futureseeds.com/schema/zookeeper http://futureseeds.com/schema/tags/zkconfigurer.xsd">
+
+	<!-- ========================= GENERAL DEFINITIONS ========================= -->
+	<!-- beanpostProcessor definition -->
+	<context:annotation-config />
+
+	<bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="order" value="1" />
+		<property name="ignoreUnresolvablePlaceholders" value="true" />
+		<property name="locations">
+			<list>
+				<value>classpath:config/*.properties</value>
+			</list>
+		</property>
+	</bean>
+
+	<!-- 
+	<bean id="test" class="com.futureseeds.zookeeper.config.ZookeeperResourceTest">
+		<property name="testData" value="${data}"></property>
+	</bean>
+	<bean id="zkResource" class="com.futureseeds.zookeeper.ZookeeperResource" />
+	<bean id="zkPropConfigurer" class="com.futureseeds.zookeeper.ZookeeperConfigurer">
+		<property name="order" value="2" />
+		<property name="ignoreUnresolvablePlaceholders" value="true" />
+		<property name="location">
+			<ref bean="zkResource" />
+		</property>
+		<property name="locations">
+			<list>
+				<value>classpath:config/*.cfg</value>
+			</list>
+		</property>
+	</bean>
+	-->
+ 	
+ 	
+	<zk:configurer id="zkPropConfigurer" localLocations="classpath:config/*.cfg" order="2">
+		<zk:zkResource initializeBy="CONSTRUCTOR_ARGS" server="127.0.0.1:2181" znodes="/cn_dev,/zk_test"
+			pingCmd="ls" regression="true" onConnectionFailed="THROW_EXCEPTION" reloadContext="AUTO" />
+	</zk:configurer>
+
+</beans>

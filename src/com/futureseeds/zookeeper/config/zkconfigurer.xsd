@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns="http://futureseeds.com/schema/zookeeper" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns:beans="http://www.springframework.org/schema/beans" targetNamespace="http://futureseeds.com/schema/zookeeper"
+	elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xsd:import namespace="http://www.springframework.org/schema/beans" />
+
+	<xsd:element name="configurer">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:extension base="beans:identifiedType">
+					<xsd:sequence>
+						<xsd:element ref="zkResource" maxOccurs="1" minOccurs="1" />
+					</xsd:sequence>
+					<xsd:attribute name="order" type="xsd:int" use="optional" />
+					<xsd:attribute name="localLocations" type="xsd:string" use="optional" />
+				</xsd:extension>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="zkResource">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:extension base="beans:identifiedType">
+					<xsd:attribute name="server" use="optional" />
+					<xsd:attribute name="znodes" use="optional" />
+					<xsd:attribute name="pingCmd" use="optional" type="xsd:string" />
+					<xsd:attribute name="regression" use="optional" type="xsd:boolean" />
+					<xsd:attribute name="onConnectionFailed" use="optional">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:enumeration value="IGNORE" />
+								<xsd:enumeration value="THROW_EXCEPTION" />
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+					<xsd:attribute name="reloadContext" use="optional">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:enumeration value="AUTO" />
+								<xsd:enumeration value="HOLD" />
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+					<xsd:attribute name="initializeBy" use="required">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:enumeration value="LOCAL_FILE" />
+								<xsd:enumeration value="CONSTRUCTOR_ARGS" />
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+				</xsd:extension>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+</xsd:schema>  

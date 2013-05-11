@@ -1,0 +1,10 @@
+#########################
+#						#
+#	Data Source			#
+#						#
+#########################
+mysql.subsdb.jdbc.type=testdb
+mysql.subsdb.jdbc.driverClassName=com.mysql.jdbc.Driver
+mysql.subsdb.jdbc.url=jdbc:mysql://172.16.100.34:3306/testdb?useUnicode=true&amp;characterEncoding=utf-8
+mysql.subsdb.jdbc.username=test
+mysql.subsdb.jdbc.password=test

@@ -1,0 +1,65 @@
+The module create a customized PropertyPlaceholderConfigurer which load properties from Zookeeper. And also with properties changing in 
+Zookeeper server, the module will trigger SpringFramework context reload.
+There're 2 ways to load the module when you use SpringFramework as application container
+1. Bean Style
+	a. add jar to the classpath.
+	b. in your spring application context definition XML add following bean definition
+	<bean id="zkResource" class="com.futureseeds.zookeeper.ZookeeperResource" />
+	<bean id="zkPropConfigurer" class="com.futureseeds.zookeeper.ZookeeperConfigurer">
+		<property name="order" value="2" />
+		<property name="ignoreUnresolvablePlaceholders" value="true" />
+		<property name="location">
+			<ref bean="zkResource" />
+		</property>
+		<!-- if you have local resources, remove comments of location property. -->
+		<!--
+		<property name="locations">
+			<list>
+				<value>classpath:config/*.cfg</value>
+			</list>
+		</property>
+		-->
+	</bean>
+	c. put zk.properties into classpath:/config/, change value according to annotations
+
+2. Customized Schema Style
+	a. add jar to the classpath. 
+	b. add tag schema declaration and tag body in application context definition XML
+	<beans ...
+	xmlns:zk="http://futureseeds.com/schema/zookeeper"
+	xsi:schemaLocation="
+			...
+			http://futureseeds.com/schema/zookeeper http://futureseeds.com/schema/tags/zkconfigurer.xsd
+			...">
+	...
+	<zk:configurer id="zkPropConfigurer" localLocations="classpath:config/*.cfg" order="2">
+		<zk:zkResource initializeBy="LOCAL_FILE"/>
+	</zk:configurer>
+	...
+	</beans>
+	c. put zk.properties into classpath:/config/, change value according to comments, or you can define the config in context
+	XML, by using tag:
+	<zk:zkResource initializeBy="CONSTRUCTOR_ARGS" server="127.0.0.1:2181" znodes="/cn_dev,/zk_test"
+			pingCmd="ls" regression="true" onConnectionFailed="THROW_EXCEPTION" reloadContext="AUTO" />
+	instead of by zkResource.initializeBy = "LOCAL_FILE".
+	
+Then you can Use ${propName} to take reference just like when you use PropertyPlaceholderConfigurer, if property defined in zookeeper znodes, value will be set.
+
+Notice:
+1. Both load methods have been tested in Spring Framework 2.5.6 and passed.
+2. If you've one or more PropertyPlaceholderConfigurer, remember to set 'order' attribute and 'ignoreUnresolvablePlaceholders' to every placeholderConfigurer. 
+   Attribute 'order' decides the precedence of your resource. 0 is most important, default value is 2^31-1, which is the lowest
+   precedence. Lowest precedence means once variable conflict encountered, variable read from your config will always be overwritten!
+   Attribute 'ignoreUnresolvablePlaceholders' must be set to 'true' or unexpected result will come. (Customized schema tag has set the value so you just need 
+   keep notice on bean style definitions)
+2. One can disable automatic context reload by changing setting in zk.properties from 'reload_context=AUTO' to 'reload_context=HOLD'. 
+   JMX is under consideration to be used to expose interface of trigger manually reload.
+3. UI for znode control will be also part of it. Under investigation.
+4. Currently property file with XML format is not supported. Not sure but said Spring 3.X will support XML resource by nature.  
+5. No test of perm memory leak on Spring context reload, if you encounter, check whether your beans, especially those connection-keeping beans, have reclaim the resource
+   or not when bean disposed. If everything fine with your beans, your lucky to fire bugs to Spring Framework.
+
+Have Fun!
+
+james.wu.shanghai@gmail.com
+May 2013 
